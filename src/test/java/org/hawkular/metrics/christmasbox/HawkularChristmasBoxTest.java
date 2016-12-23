@@ -49,8 +49,8 @@ public class HawkularChristmasBoxTest {
             CHRISTMAS_BOX.ohOhFuck(e.getClass());
         }
         MonitoringSession monitoringSession = CHRISTMAS_BOX.prepareMonitoringSession(500, TimeUnit.MILLISECONDS)
-                        .feeds(CPUMonitoring.feeds(CHRISTMAS_BOX, Collections.singletonMap("type", "cpu")))
-                        .feeds(MemoryMonitoring.feeds(CHRISTMAS_BOX, Collections.singletonMap("type", "memory")))
+                        .feeds(new CPUMonitoring(Collections.singletonMap("type", "cpu")))
+                        .feeds(new MemoryMonitoring(Collections.singletonMap("type", "memory")))
                         .start();
         try {
             Thread.sleep(60*1000);

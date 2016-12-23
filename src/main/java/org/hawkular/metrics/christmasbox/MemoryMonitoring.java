@@ -20,6 +20,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +31,20 @@ import com.sun.management.OperatingSystemMXBean;
 /**
  * @author Joel Takvorian
  */
-public final class MemoryMonitoring {
+public class MemoryMonitoring implements MonitoringSession.FeederSet {
 
-    private static final HawkularChristmasBox HWK = HawkularChristmasFactory.get(MemoryMonitoring.class);
+    private final Map<String, String> tags;
 
-    private MemoryMonitoring() {
+    public MemoryMonitoring(Map<String, String> tags) {
+        this.tags = tags;
     }
 
-    public static Collection<MonitoringSession.Feeder> feeds(HawkularChristmasBox sessionBox, Map<String, String> tags) {
+    public MemoryMonitoring() {
+        this(Collections.emptyMap());
+    }
+
+    @Override
+    public Collection<MonitoringSession.Feeder> feeds(HawkularChristmasBox sessionBox) {
         OperatingSystemMXBean operatingSystemMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         MemoryUsage memoryUsage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
         List<MonitoringSession.Feeder> feeds = new ArrayList<>();

@@ -22,9 +22,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
-
-import org.hawkular.metrics.christmasbox.model.Gauge;
 
 /**
  * @author Joel Takvorian
@@ -43,12 +40,14 @@ public class MonitoringSession {
     }
 
     public static class Builder {
+        private final HawkularChristmasBox sessionBox;
         private final long frequency;
         private final TimeUnit timeUnit;
         private final List<Feeder> feeds = new ArrayList<>();
         private int threadPoolSize = 5;
 
-        public Builder(long frequency, TimeUnit timeUnit) {
+        public Builder(HawkularChristmasBox sessionBox, long frequency, TimeUnit timeUnit) {
+            this.sessionBox = sessionBox;
             this.frequency = frequency;
             this.timeUnit = timeUnit;
         }
@@ -58,8 +57,8 @@ public class MonitoringSession {
             return this;
         }
 
-        public Builder feeds(Collection<Feeder> feeds) {
-            this.feeds.addAll(feeds);
+        public Builder feeds(FeederSet feederSet) {
+            this.feeds.addAll(feederSet.feeds(sessionBox));
             return this;
         }
 
@@ -73,22 +72,11 @@ public class MonitoringSession {
         }
     }
 
-    private static class FeedingGauge {
-        private final Gauge gauge;
-        private final Supplier<Double> supplier;
-
-        private FeedingGauge(Gauge gauge, Supplier<Double> supplier) {
-            this.gauge = gauge;
-            this.supplier = supplier;
-        }
-
-        public void feed() {
-            gauge.set(supplier.get());
-        }
-    }
-
     interface Feeder {
         void feed();
     }
-}
 
+    interface FeederSet {
+        Collection<Feeder> feeds(HawkularChristmasBox sessionBox);
+    }
+}

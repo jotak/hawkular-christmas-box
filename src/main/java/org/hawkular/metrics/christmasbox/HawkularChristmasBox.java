@@ -122,7 +122,7 @@ public class HawkularChristmasBox implements CounterChangeListener, GaugeChangeL
     }
 
     public MonitoringSession.Builder prepareMonitoringSession(long frequency, TimeUnit timeUnit) {
-        return new MonitoringSession.Builder(frequency, timeUnit);
+        return new MonitoringSession.Builder(this, frequency, timeUnit);
     }
 
     /**

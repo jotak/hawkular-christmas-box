@@ -20,6 +20,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +31,22 @@ import com.sun.management.OperatingSystemMXBean;
 /**
  * @author Joel Takvorian
  */
-public final class CPUMonitoring {
+public class CPUMonitoring implements MonitoringSession.FeederSet {
 
     private static final HawkularChristmasBox HWK = HawkularChristmasFactory.get(CPUMonitoring.class);
 
-    private CPUMonitoring() {
+    private final Map<String, String> tags;
+
+    public CPUMonitoring(Map<String, String> tags) {
+        this.tags = tags;
     }
 
-    public static Collection<MonitoringSession.Feeder> feeds(HawkularChristmasBox sessionBox, Map<String, String> tags) {
+    public CPUMonitoring() {
+        this(Collections.emptyMap());
+    }
+
+    @Override
+    public Collection<MonitoringSession.Feeder> feeds(HawkularChristmasBox sessionBox) {
         OperatingSystemMXBean operatingSystemMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
         List<MonitoringSession.Feeder> feeds = new ArrayList<>();
