@@ -10,6 +10,15 @@ Integrate metrics in your app just like you would use a Logger; and don't bother
 private static final HawkularChristmasBox HWK = HawkularChristmasFactory.get(MyCoolApp.class);
 ````
 
+Or more accurately build your wishlist:
+
+````java
+HawkularChristmasBox hawkular =  HawkularChristmasBox.startWishList("tenant")
+        .addGlobalTag("owner", owner)
+        .prefixedWith(owner + ".")
+        .sendToSanta();
+````
+
 You can of course have your own applicative metrics:
 
 ````java
